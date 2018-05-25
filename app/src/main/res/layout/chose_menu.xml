@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="220dp"
+        android:padding="10dp"
+        android:layout_height="140dp"
+        android:layout_centerInParent="true"
+        android:weightSum="3"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <TextView
+            android:id="@+id/nameCardFrag"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            />
+
+        <Button
+            android:id="@+id/RedactButtonFrag"
+            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:layout_height="0dp"
+            android:background="@android:color/white"
+            android:text="Редактировать"/>
+
+        <Button
+            android:id="@+id/DeleteButtonFrag"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/white"
+            android:text="Удалить"/>
+
+    </LinearLayout>
+</RelativeLayout>
