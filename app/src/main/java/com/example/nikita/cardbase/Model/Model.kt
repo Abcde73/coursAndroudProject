@@ -5,25 +5,24 @@ import android.database.Cursor
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
-import android.os.Environment
-import android.widget.ResourceCursorTreeAdapter
-import com.example.nikita.cardbase.Contact.contact
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.Card
 import com.example.nikita.cardbase.DataBase.CardBase
 import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import android.os.Environment.getExternalStorageDirectory
-import android.provider.MediaStore
 
-class Model : contact.Model {
+class Model : Contact.Model {
 
     var dataBase: CardBase? = null
 
     lateinit var pic: Bitmap
 
-    var colorArr = IntArray(4)
+    companion object {
+        var colorArr = IntArray(4)
+    }
+
 
     override fun getSortCardArr(order: String?): LinkedList<Card> {
         val cardArr = LinkedList<Card>()
@@ -39,7 +38,7 @@ class Model : contact.Model {
             newCard.setCardColorUser(parseColor(cursor.getString(cursor.getColumnIndex(dataBase!!.KEY_COLOR))))
             newCard.setCardAddDataUser(cursor.getString(cursor.getColumnIndex(dataBase!!.KEY_ADD_DATA)))
             if (order == dataBase!!.KEY_ADD_DATA) {
-                cardArr.add(0,newCard)
+                cardArr.add(0, newCard)
             } else {
                 cardArr.add(newCard)
             }
@@ -57,9 +56,9 @@ class Model : contact.Model {
     }
 
     override fun redactCard(id: Long, cv: ContentValues) {
-         val sel = "${dataBase!!.KEY_ID} = ?"
+        val sel = "${dataBase!!.KEY_ID} = ?"
         val idRow = Array<String>(1) { id.toString() }
-        dataBase!!.writableDatabase.update(dataBase!!.KEY_TABLE_NAME, cv, sel , idRow)
+        dataBase!!.writableDatabase.update(dataBase!!.KEY_TABLE_NAME, cv, sel, idRow)
     }
 
     override fun deleteCard(id: Long) {
@@ -114,7 +113,7 @@ class Model : contact.Model {
         getColor.start()
     }
 
-    fun getColor(): IntArray{
+    fun getColor(): IntArray {
         return colorArr
     }
 
@@ -154,7 +153,7 @@ class Model : contact.Model {
 
             for (x in 0 until width) {
                 for (y in 0 until height) {
-                    pixelColor = pic.getPixel(x + width , y + height )
+                    pixelColor = pic.getPixel(x + width, y + height)
                     A += Color.alpha(pixelColor)
                     R += Color.red(pixelColor)
                     G += Color.green(pixelColor)
@@ -168,7 +167,6 @@ class Model : contact.Model {
             colorArr[3] = B / size
         }
     }
-
 
 
 }

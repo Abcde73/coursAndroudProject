@@ -2,19 +2,18 @@ package com.example.nikita.cardbase.Presenter
 
 import android.content.ContentValues
 import android.view.View
-import com.example.nikita.cardbase.Contact.contact
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.CardBase
 import com.example.nikita.cardbase.Model.Model
 import com.example.nikita.cardbase.View.AddActivity
 import android.graphics.Bitmap
-import android.graphics.Color
+import android.graphics.BitmapFactory
 import android.net.Uri
 import android.os.Environment
 import android.support.v4.content.FileProvider
 import android.widget.ImageView
 import android.widget.Toast
 import com.example.nikita.cardbase.DataBase.Card
-import com.example.nikita.cardbase.R
 import com.squareup.picasso.Picasso
 import me.dm7.barcodescanner.zxing.ZXingScannerView
 import java.io.File
@@ -22,7 +21,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class AddPresenter : contact.AddPresenter {
+class AddPresenter : Contact.AddPresenter {
 
     lateinit var addActivity: AddActivity
     lateinit var currentImage: ImageView
@@ -75,7 +74,7 @@ class AddPresenter : contact.AddPresenter {
         val stringColor: String = model.codeColor(color)
         if (stringColor != "0,0,0,0,")
             cv.put(dataBase!!.KEY_COLOR, stringColor)
-        cv.put(dataBase!!.KEY_ADD_DATA,SimpleDateFormat("dd.MM.yyyy").format(Date()))
+        cv.put(dataBase!!.KEY_ADD_DATA, SimpleDateFormat("dd.MM.yyyy").format(Date()))
         return cv
     }
 
@@ -97,41 +96,49 @@ class AddPresenter : contact.AddPresenter {
 
         if (imageFaceUri != null) {
             deleteImage(imageFaceUri!!)
+            imageFaceFilePath = ""
         }
 
         if (imageCodeUri != null) {
             deleteImage(imageCodeUri!!)
+            imageCodeFilePath = ""
         }
     }
 
     fun compuleColor() {
-        val colorBit: Bitmap = model.getScaleBitmap(1000, 1000, imageFaceFilePath)
+        var colorBit: Bitmap
+        if (!imageFaceFilePath.contains("://")) {
+            colorBit = model.getScaleBitmap(1000, 1000, imageFaceFilePath)
+        } else {
+            val way = addActivity.contentResolver.openInputStream(Uri.parse(imageFaceFilePath))
+            colorBit = BitmapFactory.decodeStream(way)
+        }
         model.setBitmap(colorBit)
     }
 
     override fun onFaceImageAddClick(v: View) {
 
-        val reqestCode = "Face"
+        val requestCode = "Face"
 
         if (imageFaceUri != null) {
             deleteImage(imageFaceUri!!)
         }
 
         currentImage = v as ImageView
-        imageFaceUri = createFile(reqestCode)
+        imageFaceUri = createFile(requestCode)
         addActivity.startCamera(imageFaceUri!!, imageFaceFilePath)
     }
 
     override fun onCodeImageClick(v: View) {
 
-        val reqestCode = "Code"
+        val requestCode = "Code"
 
         if (imageCodeUri != null) {
             deleteImage(imageCodeUri!!)
         }
 
         currentImage = v as ImageView
-        imageCodeUri = createFile(reqestCode)
+        imageCodeUri = createFile(requestCode)
         addActivity.startCamera(imageCodeUri!!, imageCodeFilePath)
     }
 
@@ -140,8 +147,8 @@ class AddPresenter : contact.AddPresenter {
         savedCard()
         addActivity.zXingScannerView = ZXingScannerView(addActivity.applicationContext)
         addActivity.setContentView(addActivity.zXingScannerView)
-        addActivity.zXingScannerView.setResultHandler(addActivity)
-        addActivity.zXingScannerView.startCamera()
+        addActivity.zXingScannerView!!.setResultHandler(addActivity)
+        addActivity.zXingScannerView!!.startCamera()
     }
 
     private fun setImageFacePathFile(imageFile: File) {
@@ -219,8 +226,8 @@ class AddPresenter : contact.AddPresenter {
         currentSavedCard.setCardNameUser(addActivity.editTextCardName.text.toString())
         currentSavedCard.setCardNumberUser(addActivity.editTextCardNumber.text.toString())
         currentSavedCard.setCardDescriptionUser(addActivity.editTextCardComment.text.toString())
-        currentSavedCard.setCardFaceImageUser(imageFaceFilePath)
-        currentSavedCard.setCardQrCodeImageUser(imageCodeFilePath)
+        if (imageFaceFilePath.contains("://")) currentSavedCard.setCardFaceImageUser(imageFaceFilePath)
+        if (imageCodeFilePath.contains("://")) currentSavedCard.setCardQrCodeImageUser(imageCodeFilePath)
     }
 
     fun getSavedCard(): Card {

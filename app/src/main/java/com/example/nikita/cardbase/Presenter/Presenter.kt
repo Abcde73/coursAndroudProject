@@ -3,7 +3,7 @@ package com.example.nikita.cardbase.Presenter
 import android.content.Intent
 import android.net.Uri
 import android.view.View
-import com.example.nikita.cardbase.Contact.contact
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.Card
 import com.example.nikita.cardbase.DataBase.CardBase
 import com.example.nikita.cardbase.Model.Model
@@ -13,7 +13,7 @@ import com.example.nikita.cardbase.View.ShowCardActivity
 import com.squareup.picasso.Picasso
 import java.util.*
 
-class Presenter : contact.Presenter {
+class Presenter : Contact.Presenter {
 
     val model = Model()
     lateinit var dataBase: CardBase
@@ -21,7 +21,6 @@ class Presenter : contact.Presenter {
     lateinit var showView: ShowCardActivity
 
     companion object {
-        var changeCard: Int? = null
         var sortOrder: String? = null
     }
 
@@ -71,8 +70,7 @@ class Presenter : contact.Presenter {
         mainView.choseDialog.cancel()
     }
 
-    override fun onRedactClickMain(v: View, id: Long, position: Int) {
-        changeCard = position
+    override fun onRedactClickMain(v: View, id: Long) {
         val intentStartAddActivity: Intent = Intent(mainView, AddActivity::class.java)
         intentStartAddActivity.putExtra("id", id.toString())
         mainView.startActivity(intentStartAddActivity)

@@ -23,7 +23,7 @@
         android:layout_alignParentEnd="true"
         app:fabSize="normal"
         app:elevation="@dimen/cardview_default_elevation"
-        app:srcCompat="@android:drawable/ic_menu_camera" />
+        app:srcCompat="@drawable/plus" />
 
 
 </RelativeLayout>

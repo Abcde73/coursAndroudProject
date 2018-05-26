@@ -5,19 +5,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.nikita.cardbase.Contact.contact
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.CardBase
 import com.example.nikita.cardbase.DataBase.CardBaseManager
 import com.example.nikita.cardbase.Presenter.Presenter
 import com.example.nikita.cardbase.R
-import com.example.nikita.cardbase.R.id.codeScreen
-import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_show_card.*
 
-class ShowCardActivity : AppCompatActivity(), contact.ShowView {
+class ShowCardActivity : AppCompatActivity(), Contact.ShowView {
 
     val presenter = Presenter()
     val dataBase: CardBase? = CardBaseManager.getDataBase(this)

@@ -4,26 +4,15 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.widget.Adapter
-import com.example.nikita.cardbase.Contact.contact
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.Card
 import com.example.nikita.cardbase.R
 import java.util.*
-import kotlin.collections.ArrayList
-import android.R.attr.fragment
-import android.content.ContentValues
-import android.content.Intent
-import android.database.sqlite.SQLiteDatabase
 import android.support.design.widget.FloatingActionButton
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentTransaction
 import android.view.View
-import android.widget.Toast
 import com.example.nikita.cardbase.DataBase.CardBase
 import com.example.nikita.cardbase.DataBase.CardBaseManager
 import com.example.nikita.cardbase.Presenter.Presenter
-import android.R.attr.name
-import android.R.attr.name
 import android.app.Dialog
 import android.content.pm.ActivityInfo
 import android.view.Menu
@@ -32,7 +21,7 @@ import android.widget.Button
 import android.widget.TextView
 
 
-class MainActivity : AppCompatActivity(), contact.MainView {
+class MainActivity : AppCompatActivity(), Contact.MainView {
 
 
     lateinit var fab: FloatingActionButton
@@ -85,7 +74,7 @@ class MainActivity : AppCompatActivity(), contact.MainView {
 
                 dialogCardName.setText(cardsArr[position].getCardNameUser())
 
-                dialogRedactButton.setOnClickListener({v -> presenter.onRedactClickMain(v, cardsArr[position].getCardIdUser(), position)})
+                dialogRedactButton.setOnClickListener({v -> presenter.onRedactClickMain(v, cardsArr[position].getCardIdUser())})
                 dialogDeleteButton.setOnClickListener({ v -> presenter.onDeleteClick(v, position)})
 
                 choseDialog.show()

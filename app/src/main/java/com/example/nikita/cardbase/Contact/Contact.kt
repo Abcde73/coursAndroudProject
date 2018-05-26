@@ -9,7 +9,7 @@ import com.example.nikita.cardbase.View.MainActivity
 import com.example.nikita.cardbase.View.ShowCardActivity
 import java.util.*
 
-interface contact {
+interface Contact {
 
     interface MainView {
         fun initView()
@@ -29,7 +29,7 @@ interface contact {
         fun initOrder()
         fun onAddClick(v: View)
         fun onRedactClickShow (id: Long)
-        fun onRedactClickMain(v: View, id: Long, position: Int)
+        fun onRedactClickMain(v: View, id: Long)
         fun onDeleteClick(v: View, position: Int)
         fun onShowClick(v: View, position: Int)
         fun getCardArr(): LinkedList<Card>
@@ -55,12 +55,5 @@ interface contact {
 
     }
 
-    interface CardDataBase {
-        fun getCardInfo(): Card
-        fun addCard(card: Card)
-        fun sortCardAlf()
-        fun sortCardDate()
-        fun deleteCard()
-        fun redactCard()
-    }
+
 }

@@ -4,26 +4,14 @@ import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
-import android.view.View
-import com.example.nikita.cardbase.Contact.contact
-import com.example.nikita.cardbase.DataBase.Card
+import com.example.nikita.cardbase.Contact.Contact
 import com.example.nikita.cardbase.DataBase.CardBase
 import com.example.nikita.cardbase.DataBase.CardBaseManager
 import com.example.nikita.cardbase.Presenter.AddPresenter
 import com.example.nikita.cardbase.R
-import android.R.attr.data
 import android.app.Activity
-import android.app.VoiceInteractor
 import android.content.pm.ActivityInfo
-import android.support.v4.app.NotificationCompat.getExtras
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.net.Uri
-import android.os.Environment
-import android.os.Environment.DIRECTORY_PICTURES
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.FileProvider
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.*
@@ -32,15 +20,10 @@ import com.squareup.picasso.Picasso
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import me.dm7.barcodescanner.zxing.ZXingScannerView
-import java.io.File
-import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.*
 
 
-class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.ResultHandler {
+class AddActivity : AppCompatActivity(), Contact.AddView, ZXingScannerView.ResultHandler {
 
-    /*Navigation element*/
     lateinit var editTextCardName: EditText
     lateinit var editTextCardNumber: EditText
     lateinit var editTextCardComment: EditText
@@ -48,7 +31,7 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
     lateinit var imageViewCode: ImageView
 
     lateinit var cameraButton: ImageButton
-    lateinit var zXingScannerView: ZXingScannerView
+    var zXingScannerView: ZXingScannerView? = null
 
     lateinit var presenter: AddPresenter
     var dataBase: CardBase? = null
@@ -69,6 +52,7 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
             val id = intent.getStringExtra("id").toLong()
             presenter.initRedactCard(presenter.model.getInfoCardShow(id))
             supportActionBar!!.setTitle("Редактирование")
+            presenter.compuleColor()
         }
     }
 
@@ -90,13 +74,17 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
         imageViewFace.setOnClickListener({ v -> presenter.onFaceImageAddClick(v) })
         imageViewCode.setOnClickListener({ v -> presenter.onCodeImageClick(v) })
 
+        imageViewFace.setImageResource(R.drawable.camerapic)
+        imageViewCode.setImageResource(R.drawable.camerapic)
+
         cameraButton.setOnClickListener({ v -> presenter.onCameraInputClick(v) })
 
     }
 
     override fun handleResult(result: Result) {
-        zXingScannerView.removeAllViewsInLayout()
-        zXingScannerView.stopCamera()
+        zXingScannerView!!.removeAllViewsInLayout()
+        zXingScannerView!!.stopCamera()
+        zXingScannerView = null
         setContentView(R.layout.activity_add)
         init()
         presenter.initRedactCard(presenter.getSavedCard())
@@ -112,7 +100,7 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
                         presenter.compuleColor()
                     }
                     CropImage.activity(currentUri).setAspectRatio(1, 1).setCropShape(CropImageView.CropShape.RECTANGLE).setOutputUri(currentUri).start(this)
-                    presenter.currentImage().setImageBitmap(presenter.getBitmapPicture(imagePath))
+                    //presenter.currentImage().setImageBitmap(presenter.getBitmapPicture(imagePath))
                 }
             }
             CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE -> {
@@ -127,6 +115,7 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
                             presenter.setImageCodePathFile(currentUri)
                         }
                         Picasso.get().load(currentUri).into(presenter.currentImage)
+
                         presenter.deleteLatest()
                     } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                         Toast.makeText(this, "Ошибка при кадрировании", Toast.LENGTH_SHORT).show()
@@ -140,13 +129,22 @@ class AddActivity : AppCompatActivity(), contact.AddView, ZXingScannerView.Resul
     }
 
     override fun onBackPressed() {
-       // super.onBackPressed()
-        presenter.deleteImage()
-        zXingScannerView.stopCamera()
-        setContentView(R.layout.activity_add)
-        init()
-        presenter.initRedactCard(presenter.getSavedCard())
+
+        try {
+            zXingScannerView!!.removeAllViewsInLayout()
+            zXingScannerView!!.stopCamera()
+            zXingScannerView = null
+            setContentView(R.layout.activity_add)
+            init()
+            presenter.initRedactCard(presenter.getSavedCard())
+        }catch (e: Exception) {
+            presenter.deleteImage()
+            super.onBackPressed()
+        }
+
+
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_reduct,menu)

@@ -3,12 +3,10 @@ package com.example.nikita.cardbase.DataBase
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import com.example.nikita.cardbase.Contact.contact
 
 val tableCardName: String = "Card"
 
-class CardBase(context: Context) : SQLiteOpenHelper(context, tableCardName, null, 1),
-        contact.CardDataBase {
+class CardBase(context: Context) : SQLiteOpenHelper(context, tableCardName, null, 1) {
 
     val KEY_TABLE_NAME = tableCardName
     val KEY_ID: String = "_id"
@@ -36,28 +34,4 @@ class CardBase(context: Context) : SQLiteOpenHelper(context, tableCardName, null
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getCardInfo(): Card {
-        val card: Card = Card()
-        return card
-    }
-
-    override fun addCard(card: Card) {
-
-    }
-
-    override fun sortCardAlf() {
-
-    }
-
-    override fun sortCardDate() {
-
-    }
-
-    override fun deleteCard() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun redactCard() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 }
